@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bundle & Save</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+  :root {
+    --color-primary: #2a8a7f;
+    --color-primary-light: #3db7ad;
+    --color-border: #c7cfd6;
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #666666;
+    --color-bg: #f9f9f9;
+    --color-green: #21857b;
+    --color-white: #fff;
+    --border-radius: 12px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --shadow-light: 0 4px 8px rgb(0 0 0 / 0.05);
+    font-size: 16px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+
+
+  header, footer {
+    background-color: var(--color-white);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-light);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+
+
+  main {
+    max-width: 900px;
+    margin: var(--spacing-lg) auto;
+    padding: 0 var(--spacing-md);
+  }
+
+  .bundle-save {
+    background: var(--color-white);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-light);
+  }
+
+  .bundle-save h2 {
+    text-align: center;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+
+  .option {
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+  }
+
+  .option.selected {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 6px var(--color-primary-light);
+  }
+
+  input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid var(--color-border);
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+    flex-shrink: 0;
+    outline-offset: 3px;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="radio"]:checked {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+  }
+
+  input[type="radio"]:checked::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-white);
+  }
+
+  .option-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+
+  .option-text {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .option-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-left: 12px;
+    white-space: nowrap;
+  }
+
+  .option-discount {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-green);
+    white-space: nowrap;
+  }
+
+  .option-details {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    gap: var(--spacing-md);
+    display: none;
+    flex-direction: column;
+  }
+  .option.selected .option-details {
+    display: flex;
+  }
+
+  .select-group {
+    display: flex;
+    gap: var(--spacing-lg);
+  }
+
+  label.size-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  select {
+    font-size: 1rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1.2px solid var(--color-border);
+    color: var(--color-text-primary);
+    background-color: var(--color-white);
+    cursor: pointer;
+    min-width: 96px;
+    transition: border-color 0.3s ease;
+  }
+  select:focus {
+    outline: none;
+    border-color: var(--color-primary-light);
+    box-shadow: 0 0 8px var(--color-primary-light);
+  }
+
+  .badge-popular {
+    font-size: 0.8rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    background-color: var(--color-bg);
+    padding: 2px 8px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+
+  .shipping-total {
+    margin-top: var(--spacing-lg);
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-text-secondary);
+    font-size: 0.925rem;
+  }
+
+  .shipping {
+    color: var(--color-green);
+  }
+
+  .total {
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .add-to-btn {
+    margin-top: var(--spacing-lg);
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--border-radius);
+    color: var(--color-white);
+    font-weight: 600;
+    font-size: 1.25rem;
+    padding: 16px 0;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .add-to-btn:hover,
+  .add-to-btn:focus {
+    background-color: var(--color-primary-light);
+    outline: none;
+  }
+
+  .material-icons.action-button {
+    font-size: 1.5rem;
+  }
+    main {
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  
+</style>
+</head>
+<body>
+
+
+<main>
+  <section class="bundle-save" aria-labelledby="bundle-save-title">
+    <h2 id="bundle-save-title">Bundle &amp; Save</h2>
+    <form id="bundleForm" aria-describedby="bundleInstructions">
+      
+      
+      
+      <label class="option" for="bundle1" tabindex="0">
+        <input type="radio" name="bundle" id="bundle1" value="1" aria-describedby="discount1 " />
+        <div class="option-content" style="gap: 12px; flex-wrap: wrap; align-items: center;">
+          <div style="display:flex;gap:12px;flex-grow:1;align-items:center;">
+            <div class="option-text">1 Pair</div>
+          </div>
+          <div style="display:flex; gap: 12px; flex-grow: 1;">
+            <span class="option-price" aria-label="Discounted Price 195 Danish Krone" id="bundle1-price">DKK 195.00</span>
+            <del style="color: #ccc; font-size:0.88rem; flex-shrink:0;" aria-label="Original price 195 Danish Krone">DKK 195.00</del>
+          </div>
+          <div class="option-discount" id="discount1">50% OFF</div>
+        </div>
+
+        <div class="option-details" aria-live="polite" aria-atomic="true">
+          <div class="select-group" role="group" aria-labelledby="pair1-label">
+            <div>
+              <label for="size1" id="pair1-label" class="size-label">#1 Size</label>
+              <select name="size1" id="size1" aria-describedby="pair1-label">
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+              </select>
+            </div>
+            <div>
+              <label for="color1" class="size-label">Colour</label>
+              <select name="color1" id="color1" aria-describedby="pair1-label">
+                <option value="colour">colour</option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+                <option value="blue">Blue</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="select-group" role="group" aria-labelledby="pair2-label">
+            <div>
+              <label id="pair2-label" for="size2" class="size-label">#2 Size</label>
+              <select name="size2" id="size2" aria-describedby="pair2-label">
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+              </select>
+            </div>
+            <div>
+              <label for="color2" class="size-label">Colour</label>
+              <select name="color2" id="color2" aria-describedby="pair2-label">
+                <option value="colour">colour</option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+                <option value="blue">Blue</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </label>
+      <label class="option" for="bundle2" tabindex="0">
+        <input type="radio" name="bundle" id="bundle2" value="2" aria-describedby="discount2 mostPopular" />
+        <div class="option-content" style="gap: 12px; flex-wrap: wrap; align-items: center;">
+          <div style="display:flex;gap:12px;flex-grow:1;align-items:center;">
+            <div class="option-text">2 Pair</div>
+            <div class="badge-popular" id="mostPopular">Most Popular</div>
+          </div>
+          <div style="display:flex; gap: 12px; flex-grow: 1;">
+            <span class="option-price" aria-label="Discounted Price 345 Danish Krone" id="bundle2-price">DKK 345.00</span>
+            <del style="color: #ccc; font-size:0.88rem; flex-shrink:0;" aria-label="Original price 195 Danish Krone">DKK 195.00</del>
+          </div>
+          <div class="option-discount" id="discount2">40% OFF</div>
+        </div>
+
+        <div class="option-details" aria-live="polite" aria-atomic="true">
+          <div class="select-group" role="group" aria-labelledby="pair1-label">
+            <div>
+              <label for="size1" id="pair1-label" class="size-label">#1 Size</label>
+              <select name="size1" id="size1" aria-describedby="pair1-label">
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+              </select>
+            </div>
+            <div>
+              <label for="color1" class="size-label">Colour</label>
+              <select name="color1" id="color1" aria-describedby="pair1-label">
+                <option value="colour">colour</option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+                <option value="blue">Blue</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="select-group" role="group" aria-labelledby="pair2-label">
+            <div>
+              <label id="pair2-label" for="size2" class="size-label">#2 Size</label>
+              <select name="size2" id="size2" aria-describedby="pair2-label">
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+              </select>
+            </div>
+            <div>
+              <label for="color2" class="size-label">Colour</label>
+              <select name="color2" id="color2" aria-describedby="pair2-label">
+                <option value="colour">colour</option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+                <option value="blue">Blue</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </label>
+      
+      <label class="option" for="bundle3" tabindex="0">
+        <input type="radio" name="bundle" id="bundle3" value="3" aria-describedby="discount3" />
+        <div class="option-content">
+          <div class="option-text">3 Pair</div>
+          <div>
+            <span class="option-price" aria-label="Price 528 Danish Krone">DKK 528.00</span>
+          </div>
+          <div class="option-discount" id="discount3">60% OFF</div>
+        </div>
+        <div class="option-details" aria-live="polite" aria-atomic="true">
+          <div class="select-group" role="group" aria-labelledby="pair1-label">
+            <div>
+              <label for="size1" id="pair1-label" class="size-label">#1 Size</label>
+              <select name="size1" id="size1" aria-describedby="pair1-label">
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+              </select>
+            </div>
+            <div>
+              <label for="color1" class="size-label">Colour</label>
+              <select name="color1" id="color1" aria-describedby="pair1-label">
+                <option value="colour">colour</option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+                <option value="blue">Blue</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="select-group" role="group" aria-labelledby="pair2-label">
+            <div>
+              <label id="pair2-label" for="size2" class="size-label">#2 Size</label>
+              <select name="size2" id="size2" aria-describedby="pair2-label">
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+              </select>
+            </div>
+            <div>
+              <label for="color2" class="size-label">Colour</label>
+              <select name="color2" id="color2" aria-describedby="pair2-label">
+                <option value="colour">colour</option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+                <option value="blue">Blue</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </label>
+      
+      <div class="shipping-total" aria-live="polite" aria-atomic="true">
+        <div class="shipping">Free 2 Day Shipping</div>
+        <div class="total" id="totalPrice" aria-live="polite">Total: DKK 0.0</div>
+      </div>
+      
+      <button type="submit" class="add-to-btn" >
+        <span class="material-icons action-button" >add</span> Add to Cart
+      </button>
+    </form>
+  </section>
+</main>
+
+
+<script>
+  (() => {
+    'use strict';
+
+    const form = document.getElementById('bundleForm');
+    const bundles = [...form.elements.bundle];
+    const totalPriceEl = document.getElementById('totalPrice');
+
+    const prices = {
+      '1': 195.00,
+      '2': 345.00,
+      '3': 528.00,
+    };
+
+    const discounts = {
+      '1': '50% OFF',
+      '2': '40% OFF',
+      '3': '60% OFF',
+    };
+
+    function updateTotalPrice() {
+      const selectedBundle = bundles.find(r => r.checked).value;
+      const price = prices[selectedBundle] || 0;
+
+      totalPriceEl.textContent = `Total: DKK ${price.toFixed(2)}`;
+    }
+
+    function handleSelectionChange() {
+      bundles.forEach(radio => {
+        const optionLabel = radio.closest('.option');
+        if (radio.checked) {
+          optionLabel.classList.add('selected');
+        } else {
+          optionLabel.classList.remove('selected');
+        }
+      });
+      updateTotalPrice();
+    }
+
+    bundles.forEach(radio => {
+      radio.addEventListener('change', handleSelectionChange);
+    });
+
+    handleSelectionChange();
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const selectedBundle = bundles.find(r => r.checked).value;
+      let sizesColors = {};
+
+      if (selectedBundle === '2') {
+        sizesColors = {
+          pair1: {
+            size: form.size1.value,
+            color: form.color1.value
+          },
+          pair2: {
+            size: form.size2.value,
+            color: form.color2.value
+          }
+        };
+      }
+
+      alert(
+        `Added :\nBundle: ${selectedBundle} Pair${selectedBundle === '1' ? '' : 's'}\n` +
+          (selectedBundle === '2'
+            ? `Sizes & Colors:\n#1: Size ${sizesColors.pair1.size}, Color ${sizesColors.pair1.color}\n#2: Size ${sizesColors.pair2.size}, Color ${sizesColors.pair2.color}`
+            : '') +
+          `\nTotal Price: DKK ${prices[selectedBundle].toFixed(2)}`
+      );
+    });
+
+  })();
+</script>
+
+</body>
+</html>
+
